@@ -1,1 +1,7 @@
 .ipynb_checkpoints/
+.ipython/
+.jupyter/*
+!.jupyter/custom
+.local/
+.cache/
+.DS_Store
