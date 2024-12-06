@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "maths"
+version = "0.1.0"
+description = ""
+authors = ["Samir Seth <samir@sarvam.ai>"]
+readme = "README.md"
+packages = [{include = "maths"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+jupyter-book = "^1.0.3"
+matplotlib = "^3.9.2"
+numpy = "^2.1.3"
+networkx = "^3.4.2"
+jupyter = "^1.1.1"
+scipy = "^1.14.1"
+sympy = "^1.13.3"
+ipympl = "^0.9.4"
+httpx = "<0.28.0"
+
+
+[tool.mypy]
+plugins = "numpy.typing.mypy_plugin"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
