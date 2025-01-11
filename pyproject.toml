@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "maths"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.12"
 jupyter-book = "^1.0.3"
 matplotlib = "^3.9.2"
 numpy = "^2.1.3"
@@ -17,6 +17,15 @@ scipy = "^1.14.1"
 sympy = "^1.13.3"
 ipympl = "^0.9.4"
 httpx = "<0.28.0"
+k3d = "^2.16.1"
+sympy-plot-backends = {extras = ["all"], version = "^3.4.1"}
+bokeh = "^3.6.2"
+jupyter-bokeh = "^4.0.5"
+mpmath = "^1.3.0"
+shapely = "^2.0.6"
+scienceplots = "^2.1.1"
+dtreeviz = "^2.2.2"
+scikit-learn = "^1.6.0"
 
 
 [tool.mypy]

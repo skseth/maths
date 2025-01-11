@@ -28,7 +28,13 @@ define([
     promises.app_initialized.then(function (appName) {
         if (appName !== 'NotebookApp') return;
         MathJax.Hub.Config({
-            TeX: { equationNumbers: { autoNumber: "AMS" } }
+            displayAlign: 'left',
+            TeX: { equationNumbers: { autoNumber: "AMS" } },
+            tex2jax: {
+              inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+              displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+              processEscapes: true
+            },
         });
 
         // console.log("calling Mathjax Hub Config")
