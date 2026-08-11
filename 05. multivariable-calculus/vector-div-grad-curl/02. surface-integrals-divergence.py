@@ -1,0 +1,542 @@
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.19.5
+#   kernelspec:
+#     display_name: Python 3
+#     language: python
+#     name: python3
+# ---
+
+# %% [markdown]
+# # Surface Integral
+#
+# Example: Gauss's Law
+#
+# $$\iint_S \mathbf{E} \cdot \hat{\mathbf{n}} dS = \dfrac{q}{\epsilon_0}$$
+#
+#
+# ### Unit Normal Vector ($\mathbf{\hat{n}}$)
+#
+# The normal vector is perpendicular to the surface at each point. As usual in calculus terms, we take a small area around the around - and in the limit, we get the integral of vector field E around the entire surface.
+#
+# Suppose $z = f(x,y)$. We want to find two vectors $\mathbf{u}$ and $\mathbf{v}$ in the tangent plane at some point P on this surface, in the xz plane (y constant), one in the yz plane (x constant). Suppose $\mathbf{u}$ has an arbitrary x component $u_x$ (we will see this disappears), and $\mathbf{v}$ has an arbitrary y component $v_y$. Then:
+#
+# $$\mathbf{u} = u_x \hat{\mathbf{i}} + u_x\dfrac{\partial f}{\partial x}\hat{\mathbf{k}} = \left[ \hat{\mathbf{i}} + \dfrac{\partial f}{\partial x}\hat{\mathbf{k}} \right]u_x$$
+#
+#
+# $$\mathbf{v} = v_y \hat{\mathbf{j}} + v_y\dfrac{\partial f}{\partial y}\hat{\mathbf{k}} = \left[ \hat{\mathbf{j}} + \dfrac{\partial f}{\partial y}\hat{\mathbf{k}} \right]v_y$$
+#
+# Now, we can take the cross product, and get a normal vector (though not the unit vector):
+#
+# $$\mathbf{u} \times \mathbf{v} = \left[-\dfrac{\partial f}{\partial x}\hat{\mathbf{i}}  -\dfrac{\partial f}{\partial y}\hat{\mathbf{j}} + \hat{\mathbf{k}}  \right]u_xv_y$$
+#
+# $$\hat{\mathbf{n}}(x,y,z) = \dfrac{\mathbf{u} \times \mathbf{v}}{| \mathbf{u} \times \mathbf{v} | } = \dfrac{-\dfrac{\partial f}{\partial x}\hat{\mathbf{i}}  -\dfrac{\partial f}{\partial y}\hat{\mathbf{j}} + \hat{\mathbf{k}}}{\sqrt{1 + \left( \dfrac{\partial f}{\partial x} \right)^2 + \left( \dfrac{\partial f}{\partial y} \right)^2 }}$$
+
+# %% [markdown] vscode={"languageId": "plaintext"}
+# **Unit Normal in Cylindrical Coordinates (not in book)**
+#
+# We express $z = f(x,y) = f(r\cos(\theta), r\sin(\theta)) = g(r, \theta)$
+#
+# Let R be the surface in 3D. Then:
+#
+# $\mathbf{R}(r, \theta) = \left< r\cos(\theta), r\sin(\theta), g(r, \theta) \right>$ - note that these are cartesian coordinates.
+#
+# Now, taking partial derivative, w.r.t. r
+#
+# $\mathbf{u} = \dfrac{\partial R}{\partial r} = \left< \cos(\theta), \sin(\theta), \dfrac{\partial g}{\partial r} \right>$
+#
+#
+# $\mathbf{v} = \dfrac{\partial R}{\partial \theta} = \left< -r\sin(\theta), r\cos(\theta), \dfrac{\partial g}{\partial \theta} \right>$
+#
+# $\mathbf{u} \times \mathbf{v} = \left< - r\cos(\theta)\dfrac{\partial g}{\partial r} + \sin(\theta)\dfrac{\partial g}{\partial \theta}, - r\sin(\theta)\dfrac{\partial g}{\partial r} - \cos(\theta)\dfrac{\partial g}{\partial \theta}, r \right>$
+#
+# Converting to cylindrical coordinates:
+#
+# $\mathbf{u} \times \mathbf{v} = -r(\cos(\theta)\mathbf{i} + \sin(\theta)\mathbf{j})\dfrac{\partial g}{\partial r} -(-sin(\theta)\mathbf{i} + cos(\theta)\mathbf{j})\dfrac{\partial g}{\partial \theta} + \mathbf{k} = -r\dfrac{\partial g}{\partial r}\mathbf{\hat{r}} - \dfrac{\partial g}{\partial \theta}\mathbf{\hat{\theta}} + r\mathbf{\hat{z}}$
+#
+#
+# $|\mathbf{u} \times \mathbf{v}|^2 = r^2\cos^2(\theta)    (\dfrac{\partial g}{\partial r})^2 -2r\sin(\theta)\cos(\theta)\dfrac{\partial g}{\partial r}\dfrac{\partial g}{\partial \theta} +  \sin^2(\theta) (\dfrac{\partial g}{\partial \theta})^2 + r^2\sin^2(\theta)    (\dfrac{\partial g}{\partial r})^2 +2r\sin(\theta)\cos(\theta)\dfrac{\partial g}{\partial r}\dfrac{\partial g}{\partial \theta} +  \cos^2(\theta) (\dfrac{\partial g}{\partial \theta})^2 + r^2$
+#
+# Simplifying, we get:
+#
+# $|\mathbf{u} \times \mathbf{v}| = r\sqrt{1 + ( \dfrac{\partial g}{\partial r} )^2 + \dfrac{1}{r^2}(\dfrac{\partial g}{\partial \theta})^2}$
+#
+# So, we get:
+#
+# $$\hat{\mathbf{n}}(r, \theta, z) = \dfrac{-\dfrac{\partial g}{\partial r}\mathbf{\hat{r}} - \dfrac{1}{r}\dfrac{\partial g}{\partial \theta}\mathbf{\hat{\theta}} + \mathbf{\hat{z}}}{\sqrt{1 + ( \dfrac{\partial g}{\partial r} )^2 + \dfrac{1}{r^2}(\dfrac{\partial g}{\partial \theta})^2}}$$
+#
+#
+
+# %% [markdown]
+# **Example - Unit Normal to Hemisphere** 
+#
+# Consider upper hemisphere of the unit sphere : $f(z) = \sqrt{1 - x^2 - y^2}$
+#
+# $\dfrac{\partial f}{\partial x} = \dfrac{1}{2}\sqrt{1 - x^2 - y^2}^{-1/2}(-2x) = -\dfrac{x}{z}$
+#
+# $\dfrac{\partial f}{\partial y} = -\dfrac{y}{z}$
+#
+# $\hat{\mathbf{n}} = \dfrac{(x/z)\hat{i} + (y/z)\hat{j} + \hat{k}}{\sqrt{1 + (x^2/z^2) + (y^2/z^2)}} = x\hat{i} + y\hat{j} + z\hat{k}$, as expected - radiating radially outwards.
+#
+
+# %% [markdown]
+# ## Definition of Surface Integrals
+#
+# Given a **vector function $\mathbf{F}(x,y,z)$**, the surface integral of this function is:
+#
+# $$\iint_S \mathbf{F} \cdot \mathbf{\hat{n}} \text{ } dS = \lim_{\substack{N \to \infty \\ \text{each } \Delta S_l \to 0}} \sum_{l=1}^{N} \mathbf{F}(x_l, y_l, z_l) \cdot \mathbf{\hat{n}} \Delta S_l$$
+#
+#
+# We can also have the surface integral of a scalar function. E.g. G(x,y,z) may represent the density of some surface at each point.
+#
+# $$\iint_S G(x,y,z) \text{ } dS = \lim_{\substack{N \to \infty \\ \text{each } \Delta S_l \to 0}} \sum_{l=1}^{N} G(x_l, y_l, z_l) \Delta S_l$$
+
+# %% [markdown]
+# ### Surface Integral of $G(x,y,z)$ over an area S of the surface $z = f(x,y)$
+#
+# In this case, we can take the projection of a small piece $\Delta S_l$ on the x-y plane, $\Delta R_l$ and add up the small rectangles in the area, adjusting for the projection.
+#
+# Adjusting, we get:
+#
+# $$\Delta S_l = \dfrac{\Delta R_l}{\mathbf{\hat{n_l}} \cdot \mathbf{k}}$$
+#
+# Note that : $\mathbf{\hat{n_l}} \cdot \mathbf{k} = \dfrac{1}{\sqrt{1 + (\partial f/\partial x)^2 + (\partial f/\partial y)^2}}$
+#
+#
+# $$\iint_S G(x,y,z) \text{ } dS = \iint_R G(x,y, f(x,y)) \sqrt{1 + (\partial f/\partial x)^2 + (\partial f/\partial y)^2} dx dy $$
+
+# %% [markdown]
+# ### Surface Integral of $G(r, \phi, \theta)$ over an area S of the surface $z = f(x,y)$
+#
+# In this book: $\theta$ is the azimuthal angle, $\phi$ is the polar angle.
+#
+# In this case, we can take the projection of a small piece $\Delta S_l$ on the x-y plane, $\Delta R_l$ and add up the small rectangles in the area, adjusting for the projection.
+#
+# Adjusting, we get:
+#
+# $$\Delta S_l = \dfrac{\Delta R_l}{\mathbf{\hat{n_l}} \cdot \mathbf{k}}$$
+#
+# Note that : $\mathbf{\hat{n_l}} \cdot \mathbf{k} = \dfrac{1}{\sqrt{1 + (\partial f/\partial x)^2 + (\partial f/\partial y)^2}}$
+#
+#
+# $$\iint_S G(x,y,z) \text{ } dS = \iint_R G(x,y, f(x,y)) \sqrt{1 + (\partial f/\partial x)^2 + (\partial f/\partial y)^2} dx dy $$
+
+# %% [markdown]
+# **Example 1**
+#
+# $G(x,y,z) = (x + z)$. The surface is $x + y + z = 0$, with $x,y,z \ge 0$. Here, we write:
+#
+# $z = f(x,y) = 1 - x - y$. $\partial f/\partial x = \partial f/\partial y = -1$. $G(x,y,z) = x + 1 - x - y = 1 - y$
+#
+# $\text{surface integral of G} = \sqrt{3}\iint_R (1 - y) dx dy = \sqrt{3}(xy - 1/2xy^2) + C$
+#
+# Evaluating where  $x,y,z \ge 0$, in the x-y plane (where z = 0), we get x = 1-y.
+#
+# $\text{int. of G} = \sqrt{3} \int\limits_{0}^{1}\int\limits_{0}^{1-y}  (1 - y) dx dy = \sqrt{3} \int\limits_{0}^{1} 1 - 2y + y^2 dy = \sqrt{3}\left[ y - y^2 + 1/3.y^3 \right]_0^1 = \dfrac{\sqrt{3}}{3} = \sqrt{3}$
+
+# %% [markdown]
+# **Example 2**
+#
+# $G(x,y,z) = z^2$, surface is $x^2 + y^2 + z^2 = 1$, with 0 <= x,y,z
+#
+# Taking derivatives etc, we get:
+#
+# $\text{int of G} = \iint_R \sqrt{1 - x^2 - y^2} dxdy = \int_{0}^{\pi/2}\int_{0}^{1} \sqrt{1 - r^2}.rdr d\theta$
+#
+# Taking u = $1 - r^2$, du = $-2rdr$ - inner integral becomes: $-(1/2) \int_{1}^{0} \sqrt{u} du =  (1/2) \int_{0}^{1} \sqrt{u} du = (1/2).(2/3) = 1/3$
+#
+# Now $1/3\int_{0}^{/pi/2}d\theta = \dfrac{\pi}{6}$
+
+# %% [markdown]
+# ### Evaluating $\iint_S \mathbf{F} \cdot \mathbf{\hat{n}} \text{ } dS$
+#
+# Given $G(x,y,z) =  \mathbf{F} \cdot \mathbf{\hat{n}}$, and z = f(x,y)
+#
+# $\iint_S \mathbf{F} \cdot \mathbf{\hat{n}} \text{ } dS = \iint_R \mathbf{F} \cdot \mathbf{\hat{n}} \text{ } \sqrt{1 + \left( \frac{\partial f}{\partial x}\right)^2 + \left( \frac{\partial f}{\partial y}\right)^2} dx \text{ } dy$
+#
+# Remember:
+#
+# $\mathbf{\hat{n}} = \frac{-\frac{\partial f}{\partial x}\hat{\mathbf{i}}  -\frac{\partial f}{\partial y}\hat{\mathbf{j}} + \hat{\mathbf{k}}}{\sqrt{1 + \left( \frac{\partial f}{\partial x} \right)^2 + \left( \frac{\partial f}{\partial y} \right)^2 }}$. So we get:
+#
+#
+# $\iint_S \mathbf{F} \cdot \mathbf{\hat{n}} \text{ } dS = \iint_R  \left( -F_x(x,y,f(x,y))\frac{\partial f}{\partial x} - F_y(x,y,f(x,y))\frac{\partial f}{\partial y} + F_z(x,y,f(x,y)) \right) dx \text{ } dy$
+
+# %% [markdown]
+# **Example**
+#
+# $\mathbf{F}(x,y,z) = \mathbf{i}z - \mathbf{j}y + \mathbf{k}x$
+#
+# S : x + 2y + 2z = 2, 0 <= x,y,z
+#
+# $z = f(x,y) = 1 - x/2 - y$
+#
+# $\frac{\partial f}{\partial x} = -1/2, \frac{\partial f}{\partial y} = -1$
+#
+# Also, rewriting: $\mathbf{F}(x,y,z) = \mathbf{i}(1 - x/2 - y) - \mathbf{j}y + \mathbf{k}x$
+#
+# So,
+#
+# $\iint_R  (1 - x/2 - y)(1/2) - y + x \quad dx \text{ } dy = \iint_R  1/2 + 3x/4 - 3y/2 dx \text{ } dy$
+#
+# x + 2y = 2 => x = 2 - 2y is the line from (0,1) to (2,0)
+#
+# Bounds of x are 0 to 2-2y. Integrating, we get $1/2x + 3x^2/8 - 3xy/2 = 1/2(2 - 2y) + 3/8(2-2y)^2 - 3/2(2 - 2y)y = 1 - y + 3/2 - 3y + 3y^2/2 - 3y + 3y^2 = 5/2 -7y +9y^2/2$. Integrating w.r.t. y : $5y/2 - 7y^2/2 + 3y^2/2$. Setting y = 1, we get 8/2 - 7/2 = 1/2.
+#
+
+# %% [markdown]
+# ## Flux - Intuition
+#
+# An integral of type : $\iint_S \mathbf{F}(x,y,z) \cdot \mathbf{\hat{n}} \text{ } dS$ is often called the flux of $\mathbf{F}$, over the surface F.
+#
+# Consider a fluid of density $\rho$, moving with velocity $\mathbf{v}$. Suppose we have a surface S perpendicular to the flow. How much fluid crosses the surface in time $\Delta t$?
+#
+# You can imagine a cylinder of length $v\Delta t$, with total mass $\rho v\Delta t \Delta S$ flowing through in time $\Delta t$. So the rate of flow is : $\rho v \Delta S$. Suppose S is not perpendicular. Then we get the total flow as : $\rho \mathbf{v} \cdot \mathbf{\hat{n}} \Delta S$. In general, then, considering an arbitrary surface, we get :
+#
+# $\text{Rate of flow through S} = \iint_S \rho(x,y,z)\mathbf{v}(x,y,z) \cdot \mathbf{\hat{n}} dS$
+#
+# So if we think of $\mathbf{F}(x,y,z) = \rho(x,y,z)\mathbf{v}(x,y,z)$, we get a picture of something flowing through per unit time (in the case the mass of water flowing per unit time).
+
+# %% [markdown]
+# ## Gauss's Law and Motivating Divergence
+#
+# Gauss's Law says :
+#
+# $\iint_S \mathbf{E} \cdot \mathbf{\hat{n}} dS = \dfrac{q}{\epsilon_0}$
+#
+# So - the "flux" of the electrostatic field through a closed surface S of radius r, is equal to the enclosed charge. 
+#
+# By symmetry, the magnitude of E is the same at all points at radius r, E(r). and the direction $\mathbf{\hat{e_r}}$ will be perpendicular to the surface of the sphere at every point.
+#
+# In other words:
+#
+# $\iint_S \mathbf{E} \cdot \mathbf{\hat{n}} dS = \iint_S E(r) \mathbf{\hat{e_r}} \cdot \mathbf{\hat{n}} dS = \iint_S E(r) dS = \dfrac{q}{\epsilon_0}$
+#
+# Integrating (knowing E(r) is a constant), we get :
+#
+# $\iint_S E(r) dS = 4\pi r^2E(r) = q/\epsilon_0$, or $E(r) = \frac{1}{4\pi \epsilon_0}\frac{q}{r^2}$, and 
+#
+# $\mathbf{E}(\mathbf{r}) = \dfrac{\mathbf{\hat{e_r}}}{4\pi \epsilon_0}\dfrac{q}{r^2}$, recovering Coulomb's law from this starting point.
+#
+# However, this form of Gauss's law is not usable easily except in very symmetric configurations because of the need to evaluate $\mathbf{E} \cdot \mathbf{\hat{n}}$ at each point.
+#
+# We can rephrase the law as follows, in terms of charge density:
+#
+# $\iint_S \mathbf{E} \cdot \mathbf{\hat{n}} dS = \dfrac{\bar{\rho}_{\Delta V}\Delta V}{\epsilon_0}$, with S being the surface that encloses the volume $\Delta V$. Taking limits :
+#
+# $$\lim\limits_{\substack{\Delta V \to 0 \\ \text{about } (x,y,z)}} \dfrac{1}{\Delta V} \iint_S \mathbf{E} \cdot \mathbf{\hat{n}} \text{ } dS = \dfrac{\rho(x,y,z)}{\epsilon_0}$$
+#
+# We now have an expression which says that as we take smaller volumes surrounding some point P, the expression above approaches the charge density at P. Note that this line of reasoning works assuming we don't have "singularities" i.e. point charges.
+
+# %% [markdown]
+# ## Divergence & Gauss's Law in Differential Form
+
+# %% [markdown]
+# We define, for an arbitrary vector function $\mathbf{F}(x,y,z)$, the divergence:
+#
+# $\text{div } \mathbf{F} = \lim\limits_{\substack{\Delta V \to 0 \\ \text{about } (x,y,z)}} \dfrac{1}{\Delta V} \iint_S \mathbf{F} \cdot \mathbf{\hat{n}} \text{ } dS$
+#
+# This is a scalar function of F. 
+#
+# We write, for $\mathbf{E}$: $\text{div } \mathbf{E} = \dfrac{\rho}{\epsilon_0}$
+#
+# If the volume is small, we can consider a small rectangular parallelopiped with a point P (x,y,z) in the center, and sides parallel to the coordinate planes. Suppose $S_1$ and $S_2$ are sides parallel to the y-z plane:
+#
+# $$\lim\limits_{\substack{\Delta V \to 0 \\ \text{about } (x,y,z)}} \dfrac{1}{\Delta V}  \iint_{S_1 + S_2} \mathbf{F} \cdot \mathbf{\hat{n}} \text{ } dS = \dfrac{F_x(x + \Delta x/2, y, z) - F_x(x - \Delta x/2, y, z)}{\Delta x}\Delta x \Delta y \Delta z = \dfrac{\partial F_x}{\partial x}$$
+#
+# Repeating for the other 4 sides, we get:
+#
+# $$\text{div } \mathbf{F} = \dfrac{\partial F_x}{\partial x} + \dfrac{\partial F_y}{\partial y} + \dfrac{\partial F_z}{\partial z}$$
+#
+# For the electrostatic field:
+#
+# $$\text{div } \mathbf{E} = \dfrac{\partial E_x}{\partial x} + \dfrac{\partial E_y}{\partial y} + \dfrac{\partial E_z}{\partial z} = \dfrac{\rho}{\epsilon_0}$$
+#
+# We can calculate the divergence in cylindrical coordinates :
+#
+# $$\text{div } \mathbf{F} = \dfrac{1}{r}\dfrac{\partial rF_r}{\partial r} + \dfrac{1}{r}\dfrac{\partial F_{\theta}}{\partial \theta} + \dfrac{\partial F_z}{\partial z}$$
+#
+# And in spherical coordinates:
+#
+# $$\text{div } \mathbf{F} = \dfrac{1}{r^2}\dfrac{\partial r^2F_r}{\partial r} + \dfrac{1}{r \sin(\phi)}\dfrac{\partial \sin(\phi)F_{\phi}}{\partial \phi} + \dfrac{1}{r \sin(\phi)}\dfrac{\partial F_{\theta}}{\partial \theta}$$
+#
+#
+
+# %% [markdown]
+# ## Del Operator
+
+# %% [markdown]
+# $$\nabla = \mathbf{i} \dfrac{\partial}{\partial x} + \mathbf{j} \dfrac{\partial}{\partial y} + \mathbf{k} \dfrac{\partial}{\partial z}$$
+#
+# We define (given $\mathbf{F} = \mathbf{i}F_x + \mathbf{j}F_y + \mathbf{k} F_z$)
+#
+# $$\nabla \cdot \mathbf{F} = \dfrac{\partial F_x}{\partial x} + \dfrac{\partial F_y}{\partial y} + \dfrac{\partial F_z}{\partial z}$$
+#
+# Now, we have:
+#
+# $$\boxed{\nabla \cdot E = \dfrac{\rho}{\epsilon_0}}$$
+
+# %% [markdown]
+# ## The Divergence Theorem
+#
+# Conceptually, if we take a closed surface, and divide up the enclosed volume into small volumes, the divergence across all touching surfaces inside the volume will cancel out (basically the flow out from a surface in one volume will cancel the flow into the other volume from the same surface). The only exception is the surfaces on the outside.
+#
+# In other words:
+#
+# $$\iint_S \mathbf{F} \cdot \mathbf{\hat{n}} \text{ } dS = \iiint_V \nabla \cdot \mathbf{F} \text{ } dV $$
+
+# %% [markdown]
+# **Deriving Differential Form of Gauss' Law from the Divergence Theorem**
+#
+# We express Gauss' Law in charge density terms, and then also connect it with the divergence theorem:
+#
+# $\iint_S \mathbf{E} \cdot \mathbf{\hat{n}} dS = \dfrac{q}{\epsilon_0} = \dfrac{1}{\epsilon_0} \iiint_V \rho dV = \iiint_V \nabla \cdot \mathbf{E} dV$
+#
+# In general two integrals being equal does not mean integrands are equal. But here the volume is arbitrary, and Gauss' law holds for any arbitrary volume V, so this equation has to be true for any volume. We conclude:
+#
+# $\nabla \cdot \mathbf{E} = \dfrac{\rho}{\epsilon_0}$
+
+# %% [markdown]
+# ## Continuity Equation and Locally Conserved Quantities
+#
+# In general, if something is conserved "locally" (and most conserved quantities in physics are), then given any region of space, we can logically say that in a given (small) region of space, in some small time $\Delta t$
+#
+# $\Delta \text{Quantity in the region} = \text{ net inflow out of the region } \text{ + any sink / source of the quantity in the region}$
+#
+# To express this mathematically:
+#
+# Let the stuff have density $\rho(x,y,z,t)$ at point (x,y,z) at time t. Let it's velocity be $\mathbf{v}(x,y,z,t)$. So $\rho\mathbf{v}$ is a vector quantifying how much "mass" is flowing in per unit time (though this could be any conserved quantity). Suppose now this quantity is not only conserved absolutely i.e. there is no sink / source. Then, 
+#
+# $\text{Quantity in the region at time t} = \iiint_V \rho(x,y,z,t)dV$. Then :
+#
+# $\Delta \text{Quantity in the region} \equiv \dfrac{d}{dt}\iiint_V \rho(x,y,z,t)dV = \iiint_V \dfrac{\partial \rho}{\partial t} dV$
+#
+# ... Assuming $\partial \rho/ \partial t$ is continuous.
+#
+# But since we are assuming that this stuff is neither created, nor destroyed, this "increase" in stuff has to be balance by the net inflow into the system. Since the "flux" is the outflow, we have to take the negative:
+#
+# $\iiint_V \dfrac{\partial \rho}{\partial t} dV = - \iint_S \rho\mathbf{v} \cdot \mathbf{\hat{n}} dS = -\iiint_V \nabla \cdot (\rho\mathbf{v}) dV$
+#
+# This is literally a statement that "stuff" is conserved. We have applied the divergence theorem for the last equality.
+#
+# It follows (given volume is arbitrary):
+#
+# $\dfrac{\partial \rho}{\partial t} = -\nabla \cdot (\rho\mathbf{v})$ 
+#
+# We set **current density** as $\mathbf{J} = \rho\mathbf{v}$, and write:
+#
+# $$\boxed{\dfrac{\partial \rho}{\partial t} + \nabla \cdot (\rho\mathbf{v}) = 0}$$
+#
+#
+#
+
+# %% [markdown]
+# # Exercises
+
+# %% [markdown]
+# II-1. Unit vector normal to:
+#
+# a) z = 2 - x - y : $\partial_x = -1, \partial_y = -1$. Ans: $\dfrac{1}{\sqrt{3}}(\mathbf{i} + \mathbf{j} + \mathbf{k})$
+#
+# b) $z = (x^2 + y^2)^{1/2}$. $\partial_x = x/z , \partial_y = y/z$. Ans: $\dfrac{1}{\sqrt{x^2 + y^2 + z^2}}(-x\mathbf{i} - y\mathbf{j} + z\mathbf{k}) = -\dfrac{1}{\sqrt{2}z}(x\mathbf{i} + y\mathbf{j} - z\mathbf{k})$
+#
+# c) $z = (1 - x^2)^{1/2}$. $\partial_x = -x/z , \partial_y = 0$, Ans: $\dfrac{1}{\sqrt{x^2 + z^2}}(x\mathbf{i} + z\mathbf{k}) = x\mathbf{i} + z\mathbf{k}$
+#
+# d) $z = x^2 + y^2$, $\partial_x = 2x , \partial_y = 2y$. Ans: $\dfrac{-2x\mathbf{i} -2y\mathbf{j} + \mathbf{k}}{\sqrt{4x^2 + 4y^2 +  1}}$
+#
+# e) $z = ( 1 - x^2/a^2 - y^2/a^2)^{1/2}$. $\partial_x = -x/a^2z  , \partial_y = -y/a^2z$. Ans :  $\dfrac{1}{\sqrt{x^2 + y^2 + a^4z^2}}(x\mathbf{i} + y\mathbf{j} + a^2z\mathbf{k})$
+
+# %% [markdown]
+# II-2: Unit normal to plane ax + by + cz = d
+#
+# z = Ax + By + C, where A = -a/c, B = -b/c, C = d/c
+#
+# $\partial_x = A, \partial_y = B$. $\dfrac{-A\mathbf{i} - B\mathbf{j} + \mathbf{k}}{\sqrt{A^2 + B^2 + 1}} = \dfrac{a\mathbf{i} + b\mathbf{j} + c\mathbf{k}}{\sqrt{a^2 + b^2 + c^2}}$
+#
+# d doesn't appear, because the normal is normal to any plane parallel to the given plane. Minus sign can come in, if the orientation is opposite.
+
+# %% [markdown]
+# II-3: Derive expressions for the unit normal vector for surfaces given by y = g(x,z) and x = h(y,z).
+
+# %% [markdown]
+#
+# $$\hat{\mathbf{n}}(x,y,z) = \dfrac{\mathbf{u} \times \mathbf{v}}{| \mathbf{u} \times \mathbf{v} | } = \dfrac{-\dfrac{\partial g}{\partial x}\hat{\mathbf{i}} + \hat{\mathbf{j}}  -\dfrac{\partial g}{\partial z}\hat{\mathbf{k}}}{\sqrt{1 + \left( \dfrac{\partial g}{\partial x} \right)^2 + \left( \dfrac{\partial g}{\partial z} \right)^2 }}$$
+#
+#
+# $$\hat{\mathbf{n}}(x,y,z) = \dfrac{\mathbf{u} \times \mathbf{v}}{| \mathbf{u} \times \mathbf{v} | } = \dfrac{\hat{\mathbf{i}} -\dfrac{\partial h}{\partial y}\hat{\mathbf{j}}  -\dfrac{\partial h}{\partial z}\hat{\mathbf{k}}}{\sqrt{1 + \left( \dfrac{\partial h}{\partial y} \right)^2 + \left( \dfrac{\partial h}{\partial z} \right)^2 }}$$
+
+# %% [markdown]
+# 11-4: (a) Evaluate:
+#
+# G(x,y,z) = z, S is x + y + z = 1, 0 <= x,y,z
+#
+# z = f(x,y) = 1 - x - y. $\partial_x = -1, \partial_y = -1$ : so the sqrt term is $\sqrt{3}$. 
+#
+# $\sqrt{3}\iint_R (1 - x - y)dxdy = \sqrt{3}\int_{0}^{1}\int_{0}^{1-y} (1 - x - y)dxdy = \sqrt{3}/2 \int_{0}^{1} 1-2y + y^2 dy =  \sqrt{3}/2 [y - y^2 + y^3/3]_0^1 = \sqrt{3}/6$
+#
+#
+#
+
+# %% [markdown]
+# 11-4: (b) Evaluate:
+#
+# $G(x,y,z) = \frac{1}{1 + 4(x^2 + y^2)}$ : S: $z = x^2 + y^2$, between z = 0 and z = 1. Note that z = 0 => the entire unit circle from 0,1 is the domain of integration in the x-y plane.
+#
+# $\partial_x = 2x, \partial_y = 2y$. root = $\sqrt{1 + 4x^2 + 4y^2}$.
+#
+# $\iint_S G dS = \iint_R \frac{1}{1 + 4(x^2 + y^2)}\sqrt{1 + 4x^2 + 4y^2}dxdy = \iint_R \frac{1}{\sqrt{1 + 4x^2 + 4y^2}}dxdy = \int_{0}^{2\pi}\int_{0}^{1} \frac{r}{\sqrt{1 + 4r^2}}drd\theta = 2\pi\int_{0}^{1} \frac{r}{\sqrt{1 + 4r^2}}dr$
+#
+# Set $u = 1 + 4r^2, du = 8rdr$
+#
+# $\frac{1}{8} \int_{0}^{1} u^{-1/2}du = [\frac{1}{4}u^{1/2}]_0^1 = [\frac{1}{4}(1 + 4r^2)^{1/2}]_0^1 = \frac{1}{4}[\sqrt{5} - 1]$
+#
+# Ans: $\frac{\pi}{2}(\sqrt{5} - 1)$
+#
+
+# %% [markdown]
+# (c) $G(x,y,z) = (1 - x^2 - y^2)^{3/2} = z^3$, on the hemishere $z = (1 - x^2 - y^2)^{1/2}$
+#
+# $\partial_x = -x/z, \partial_y = -y/z$
+#
+# root = $\sqrt{1 + x^2/z^2 + y^2/z^2} = 1/z$. So integral of $z^2dxdy = (1 - x^2 - y^2)dxdy$. In cylindrical coordinates: $\int_{0}^{1}\int_0^{2\pi}(1 - r^2)rdrd\theta = 2\pi\int_{0}^{1}(1 - r^2)rdr = 2\pi\int_{0}^{1} r - r^3 dr = 2\pi[r^2/2 - r^4/4]_0^1 = 2\pi(1/4) = \pi/2$. 
+#
+#
+
+# %% [markdown]
+# II-5: (a) F(x,y,z) = ix - kz, S : x + y + 2z = 2
+#
+# z = f(x,y) = 1/2(2 - x - y) = 1 - 1/2x - 1/2y. $\partial_x = -1/2, \partial_y = -1/2$
+#
+# F(x,y,f(x,y)) = ix - k(1/2)(2 - x - y): $F_x = x, F_z = 1 - 1/2x - 1/2y$
+#
+# $\iint_R -x(-1/2) - (1 - x/2 - y/2)dxdy = \iint_R (1 - x - y/2)dxdy = \int_{0}^{1}\int_0^{2-y} (x + y/2 - 1)dxdy$
+#
+# Inner term: $[x^2/2 + yx/2 -x]_0^{2-y} = [ 1/2.x(x + y - 2) ]_0^{2-y} = 0$
+#
+
+# %% [markdown]
+# II-5(b) F(x,y,z) = ix + jy + kz, S is the hemisphere $z = \sqrt{a^2 - x^2 - y^2}$
+#
+# $\partial_x = -x/z, \partial_y = -y/z$. $\iint_R -x(-x/z) -y(-y/z) + z dxdy = \iint_R x^2/z + y^2/z + z dxdy = a^2\iint_R \dfrac{1}{\sqrt{a^2 - x^2 - y^2}}dxdy$
+#
+# Substituting in cylindrical coordinates: $a^2\iint_R \dfrac{r}{\sqrt{a^2 - r^2}}drd\theta = -(1/2)2\pi a^2\int_{r=0}^a u^{-1/2}du = -2\pi a^2 [u^{1/2}]_0^a = -2\pi a^2 [(a^2 - r^2)^{1/2}]_0^a = 2\pi a^3$
+
+# %% [markdown]
+# II-5(c) $F(x,y,z) = \mathbf{j}y + \mathbf{k}$. S: $z = 1 - x^2 - y^2$, with $z \ge 0$
+# $\partial_x = -2x, \partial_y = -2y$. 
+#
+# $\iint_R 2y^2 + 1 dxdy = \iint_R 2y^2dxdy + \iint_R dxdy = \int_0^{2\pi} \int_0^1 r^2\sin^2(\theta)rdrd\theta + \pi = 2\pi \int_0^1 r^3dr + \pi = \pi/2 + \pi = \dfrac{3\pi}{2}$
+#
+#
+
+# %% [markdown]
+#
+
+# %% [markdown]
+# **II-6 : Distribution of mass: $\sigma(x,y,z) = \dfrac{\sigma_0}{R^2}(x^2 + y^2)$**
+#
+# Surface - $z = (R^2 - x^2 - y^2)^{1/2}$ - a hemispherical shell
+#
+# Total mass of shell: $\partial_x = -x/z, \partial_y = -y/z$, $J = \sqrt{1 + x^2/z^2 + y^2/z^2} = \dfrac{R}{z}$
+#
+# Total Mass = $\dfrac{\sigma_0}{R^2}\iint_R (x^2 + y^2)\dfrac{R}{z} dxdy = \dfrac{\sigma_0}{R}\iint_R \dfrac{x^2 + y^2}{z} dxdy = \dfrac{\sigma_0}{R}\iint_R \dfrac{x^2 + y^2}{\sqrt{R^2 - x^2 - y^2}} dxdy$
+#
+# Changing coordinates:
+#
+# So Total Mass = $\dfrac{2\pi\sigma_0}{R}\int_0^R \dfrac{r^3}{\sqrt{R^2 - r^2}} dr$
+#
+# $u = R^2 - r^2$. $du = -2rdr, rdr = -du/2, r^2 = R^2 - u$
+#
+# So Total Mass = $\dfrac{-\pi\sigma_0}{R}\int_{R^2}^0 \dfrac{R^2 - u}{u^{1/2}} du = \dfrac{-\pi\sigma_0}{R}\int_{R^2}^0 R^2u^{-1/2} - u^{1/2} du = \dfrac{-\pi\sigma_0}{R}[2R^2u^{1/2} - \frac{2}{3}u^{3/2}]_{R^2}^0 = \dfrac{-\pi\sigma_0}{R}[2R^2u^{1/2} - \frac{2}{3}u^{3/2}]_{R^2}^0 =  \dfrac{\pi\sigma_0}{R}[2R^3 - \frac{2}{3}R^3] = \dfrac{4\pi\sigma_0R^2}{3}$
+#
+#
+
+# %% [markdown]
+# **II-7 : Moment of inertia, about the z-axis of the hemispherical shell.**
+#
+#
+# So Total Moment of Inertia = $\dfrac{2\pi\sigma_0}{R}\int_0^R \dfrac{r^5}{\sqrt{R^2 - r^2}} dr = \dfrac{2\pi\sigma_0}{R}\int_0^R \dfrac{r^5}{\sqrt{R^2 - r^2}} dr$
+#
+# $r = Rw, dr = Rdw$ So we get: $\dfrac{2\pi\sigma_0}{R}\int_0^R \dfrac{R^5w^5}{R\sqrt{1 - w^2}} Rdw = 2\pi R^4\sigma_0\int_0^1 \dfrac{w^5}{\sqrt{1 - w^2}} dw$
+#
+# Substitute: $u = 1 - w^2, du = -2dw, w^2 = 1 - u, w^4 = 1 + u^2 - 2u$
+#
+# So MI = $-\pi R^4\sigma_0\int_1^0 \dfrac{1 - 2u + u^2}{\sqrt{u}} du = -\pi R^4\sigma_0\int_1^0  u^{-1/2} - 2u^{1/2} + u^{3/2} du = = -\pi R^4\sigma_0 [2u^{1/2} - 4/3u^{3/2} + 2/5u^{5/2}]_1^0 = \dfrac{16}{15}\pi R^4\sigma_0 $
+
+# %% [markdown]
+# **II-8 Electrostatic FIeld**
+#
+# $\mathbf{E} = \lambda(\mathbf{i}yz + \mathbf{j}xz + \mathbf{k}xy)$, $z = (R^2 - x^2 - y^2)^{1/2}$
+#
+# $\partial_x = -x/z, \partial_y = -y/z$
+#
+# 2 surfaces : $S$ - the hemisphere, $R$ - the circle.
+#
+# First, the hemisphere:  $\lambda\iint_R -(yz)(-x/z) -(xz)(-y/z) + xy dxdy = 3\lambda\iint_R  xy dxdy$
+#
+# For the circle: $\mathbf{E} = \lambda xy\mathbf{k}$. The normal is $-\mathbf{k}$. The integral is $-\lambda\iint_R xy dxdy$. Note that when we have projected the hemisphere on the x-y plane, we have assumed the normal is pointing upwards.
+#
+# The integral $\iint_R  xy dxdy$ : if f(x,y) = xy, then f(-x,y) = -f(x,y), and f(x,-y) = -f(x,y), f(-x,-y) = f(x,y). Thus we see that f(x,y) = f(-x,-y) = f(x,-y) + f(-x,y) - given the integration is over a symmetrical region it follows the integral is zero.
+#
+# Or, evaluating we can do the following: $\iint_R  r^3 \sin(\theta)\cos(\theta) drd\theta = \int_R  r^3dr \int_{0}^{2\pi} \sin(\theta)\cos(\theta) d \theta$. The separation is allowed because the bounds vary independently (unlike the cartesian case), and the integral is a separated product. 
+#
+# $\int_{0}^{2\pi} \sin(\theta)\cos(\theta) d \theta = 1/2\int_{0}^{2\pi} \sin(2\theta) d \theta = -1/4[cos(2t)]_0^{2\pi} = -1/4(1 - 1) = 0$
+
+# %% [markdown]
+# **II-9 Electrostatic Field $E = \lambda(ix + jy)$**
+#
+# 4 surfaces. S2, S3: Normal is i and -i. S4 normal is -k. 
+#
+# S2 flux: At x = h/2: $E.n = E.i = \lambda x = \lambda h/2$. Integrating, we get $\lambda h \pi r^2/4$
+#
+# S3 flux: At x = -h/2: $E.n = E.-i = -\lambda x = \lambda h/2$. So flux is same: $\lambda h \pi r^2/4$
+#
+#
+# S2 flux: x dxdy, S3 flux -x dxdy. (cancels). S4 - 0 - since flux is entirely in xy plane.
+#
+# That leaves S1: $z = \sqrt{r^2 - y^2}$. $\partial_x = 0, \partial_y = -y/z$
+#
+# flux = $\iint_S E.n dS = \lambda\iint_R y^2/z dxdy = \lambda\int_{-h/2}^{h/2} \int_{-r}^r y^2/\sqrt{r^2 - y^2} dxdy = \lambda h \int_{-r}^r y^2/\sqrt{r^2 - y^2} dy$
+#
+# Substituting $y = r\sin(\theta), dy = r\cos(\theta)$,  
+#
+# $2\int_{0}^r y^2/\sqrt{r^2 - y^2} dy = 2r^2\int_{0}^{\pi/2} sin^2(\theta)  d\theta = 2r^2\int_{0}^{\pi/2} \dfrac{ 1 - \cos(2\theta)}{2}  d\theta = r^2\int_{0}^{\pi/2} 1 - \cos(2\theta)  d\theta = r^2[\theta - \sin(2\theta)/2]_0^{\pi/2} = \pi r^2/2$
+#
+# So flux through $S1 = \lambda h \pi r^2/2$
+#
+# Adding S1, S2, S3, we get: $\lambda h \pi r^2 = q/\epsilon_0$, or $q = \lambda h \pi r^2\epsilon_0$
+#
+#
+#
+#
+
+# %% [markdown]
+# **Example using Differential Forms**
+#
+# Let $E = x\mathbf{i} + y \mathbf{j} + 2z \mathbf{k}$, Surface S: $z = 4 - x^2 - y^2, z \ge 0$, Domain (D): $x^2 + y^2 \le 4$
+#
+# With z = f(x,y), $d\mathbf{A} = -\dfrac{\partial z}{\partial x}\mathbf{i} -\dfrac{\partial z}{\partial y}\mathbf{j} + \mathbf{k} = -2x\mathbf{i} - 2x\mathbf{j} + \mathbf{k}$
+#
+# $\iint_R -x(-2x) - y(-2y) + 2(4 - x^2 - y^2)dxdy = \iint_R 8.dxdy$
+#
+# For differential forms:
+#
+# $\Omega = x dy \wedge dz + y dz \wedge dx + 2z dx \wedge dy$
+#
+# $dz = -2xdx - 2ydy$
+#
+# Substituting dz in $\Omega$, 
+#
+# $\Omega = x dy \wedge (-2xdx - 2ydy) + y (-2xdx - 2ydy) \wedge dx + 2(4 - x^2 - y^2) dx \wedge dy$
+#
+# $\Omega = 2x^2 dx \wedge dy + 2y^2 dx \wedge dy + (8 - 2x^2 - 2y^2) dx \wedge dy = 8 dx \wedge dy$
+#
+# $\iint_D 8 dx \wedge dy = 8 Area(D) = 8\pi2^2 = 32\pi$
+#
+
+# %% [markdown]
+#

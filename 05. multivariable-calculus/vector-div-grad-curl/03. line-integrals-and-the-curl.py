@@ -1,0 +1,267 @@
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.19.5
+# ---
+
+# %% [markdown]
+# # Work and Line Integrals
+#
+#
+
+# %% [markdown]
+# ## Integration Along A Curve
+#
+#
+
+# %% [markdown]
+# Breaking a curve of length s into N parts, we can find the sum of a function f(x,y,z) *along* the curve by :
+#
+# $\sum\limits_{i=1}^N f(x_i,y_i,z_i)\Delta s_i$, and we define the integral as :
+#
+# $$\int_C f(x,y,z)ds = \lim\limits_{\substack{N \to \infty \\ each \Delta s_i \to 0}} \sum\limits_{i=1}^N f(x_i,y_i,z_i)\Delta s_i$$
+#
+# In general, we parameterize the curve C by s. Then - $f(x,y,z) = f(x(s),y(s),z(s))$.
+#
+#
+#
+
+# %% [markdown]
+# ## Work
+#
+# Suppose the force acting along a curve C is $\mathbf{f}$. Then the work done along the curve is :
+#
+# $W = \int_C \mathbf{f}(x,y,z) \cdot \mathbf{\hat{t}}(x,y,z) ds$
+#
+# Where $\mathbf{\hat{t}}$ is the unit tangent vector along the curve C.
+#
+# **Finding the tangent vector at a point P for a parameterized curve**
+#
+# Suppose a curve is parameterized by it's arc length, s. So a point of the curve is (x(s), y(s), z(s)).
+#
+# We define :
+#
+# $\mathbf{\hat{t}}(s) = \lim\limits_{\Delta s \to 0} \dfrac{x(s + \Delta s) - x(s)}{\Delta s} \mathbf{i} + \dfrac{y(s + \Delta s) - y(s)}{\Delta s} \mathbf{j} + \dfrac{z(s + \Delta s) - z(s)}{\Delta s} \mathbf{k} = \dfrac{dx}{ds}\mathbf{i} + \dfrac{dy}{ds}\mathbf{i} + \dfrac{dz}{ds}\mathbf{k}$ 
+#
+# Note that $\lim\limits_{\Delta s \to 0} (\dfrac{x(s + \Delta s) - x(s)}{\Delta s})^2 + (\dfrac{y(s + \Delta s) - y(s)}{\Delta s})^2 + (\dfrac{z(s + \Delta s) - z(s)}{\Delta s})^2 = 1$, so this is a **unit vector**. And we can convince ourselves that as the limit of the "chords" in the curve C approach the point (x,y,z), this is the tangent to the curve.
+#
+# **Equation for Work**
+#
+# We can now write work as :
+#
+# $$W = \int_C \mathbf{f}(x,y,z) \cdot  \left[ \dfrac{dx}{ds}\mathbf{i} + \dfrac{dy}{ds}\mathbf{i} + \dfrac{dz}{ds}\mathbf{k} \right] ds$$
+#
+# or
+#
+# $$W = \int_C f_x \dfrac{dx}{ds} ds + f_y \dfrac{dy}{ds} ds + f_z \dfrac{dz}{ds} ds$$
+#
+# Note that we can transition between coordinate systems using the Jacobian:
+#
+# $dx = \dfrac{dx}{ds}ds, dy = \dfrac{dy}{ds}ds, dz = \dfrac{dz}{ds}ds$. So we can write this as :
+#
+# $$W = \int_C f_x dx + f_y dy + f_z dz$$
+#
+#
+#
+
+# %% [markdown]
+# ## Path Independence & Conservative Forces
+#
+# $$\mathbf{F} = \dfrac{qq_0}{4\pi\epsilon} \dfrac{\mathbf{r}}{r^3}$$
+#
+# So, we get :
+#
+# $$\mathbf{F} \cdot \mathbf{\hat{t}} = F_xdx + F_ydy + F_ydy = \dfrac{qq_0}{4\pi\epsilon} \dfrac{xdx + ydy + zdz}{r^3}$$
+#
+# Now, $r^2 = x^2 + y^2 + z^2$ implies $rdr = xdx + y dy + zdz$, so we get:
+#
+# $$\mathbf{F} \cdot \mathbf{\hat{t}}ds = F_xdx + F_ydy + F_ydy = \dfrac{qq_0}{4\pi\epsilon} \dfrac{dr}{r^2} $$
+#
+# Given a curve C from a point at distance $r_1$ to a point at a distance $r_2$ from the charge:
+#
+# $$\int_C \mathbf{F} \cdot \mathbf{\hat{t}}ds = \dfrac{qq_0}{4\pi\epsilon} \int_C \dfrac{dr}{r^2} = \dfrac{qq_0}{4\pi\epsilon} \left( \dfrac{1}{r_1} - \dfrac{1}{r_2} \right)$$
+#
+#
+# So the "path integral" along curve C is independent of the curve, and depends only on the end points. Which means the integral would be the same for any curve between the two points!
+#
+# **Superposition**
+#
+# If there are multiple charges $q_1, q_2, \dots q_N$ acting along the curve C, with forces $\mathbf{F_1}, \mathbf{F_2}, \dots, \mathbf{F_N}$:
+#
+# $$\int_C \mathbf{F} \cdot \mathbf{\hat{t}}ds = \int_C \mathbf{F_1} \cdot \mathbf{\hat{t}}ds + \int_C \mathbf{F_2} \cdot \mathbf{\hat{t}}ds + \dots + \int_C \mathbf{F_N} \cdot \mathbf{\hat{t}}ds$$
+#
+# **Path Independence of The Electric Field**
+#
+# Since $\mathbf{E} = q\mathbf{F}$, the path-independence of F extends to E as well, in a very simple way.
+#
+# $$\int_C \mathbf{E} \cdot \mathbf{\hat{t}}ds = \dfrac{q_0}{4\pi\epsilon} \int_C \dfrac{dr}{r^2} = \dfrac{q_0}{4\pi\epsilon} \left( \dfrac{1}{r_1} - \dfrac{1}{r_2} \right)$$
+#
+#
+
+# %% [markdown]
+# ## Central Forces
+#
+# In spherical coordinates, the tangent vector is :
+#
+# $\mathbf{\hat{t}} = \dfrac{dx}{ds}\mathbf{i} + \dfrac{dy}{ds}\mathbf{j} + \dfrac{dz}{ds}\mathbf{k} = \dot{r}\mathbf{\hat{r}} + r\dot{\mathbf{\theta}}\mathbf{\hat{\theta}} + r\sin(\theta)\dot{{\mathbf{\phi}}}\mathbf{\hat{\phi}}$
+#
+# The work equation is:
+#
+# $$\mathbf{F} \cdot \mathbf{\hat{t}} = F_rdr + rF_{\theta}d\theta + r\sin(\theta) F_{\phi} d\phi$$
+#
+# Note that as usual, one could convert this in terms of ds by using the jacobian: $dr = \dfrac{dr}{ds}ds$
+#
+# Any force for which (a) the force depends only on the distance between the particles and (b) the direction of the force is along the line joining the particles is called a **central force**. 
+#
+# We can write the central force as : $\mathbf{F} = f(r)\mathbf{\hat{r}}$. The work then becomes :
+#
+# $$\mathbf{F} \cdot \mathbf{\hat{t}} =  f(r)dr$$
+#
+# Then, we get the work along a curve C as :
+#
+# $$W = \int_C f(r)dr = F(r_2) - F(r_1)$$
+#
+# In other words, work done by any central force is path-independent.
+#
+#
+#
+#
+
+# %% [markdown]
+# ## Path-Independence, Closed Loops, Circulation and Conservative Forces
+#
+# Suppose we have a function $\mathbf{F}$ such that $\int_C \mathbf{F} \cdot \mathbf{\hat{t}} ds$ is path-independent, given 2 curves $C_1$ and $C_2$ between the same two points :
+#
+# $\int_{C_1} \mathbf{F} \cdot \mathbf{\hat{t}} ds = \int_{C_2} \mathbf{F} \cdot \mathbf{\hat{t}} ds$
+#
+# But $\int_{C_1} \mathbf{F}\cdot \mathbf{\hat{t}} ds = - \int_{-C_1} \mathbf{F}\cdot \mathbf{\hat{t}} ds$, where $\int_{-C_1}$ is just integrating along $C_1$ in the opposite direction. So we get :
+#
+# $\int_{-C_1 + C_2} \mathbf{F} \cdot \mathbf{\hat{t}} ds = 0$
+#
+# But this really means that the integral across any closed loop is zero. In physics terms, the work done on a closed path (which brings us back to the starting point) is zero i.e.
+#
+#
+# $\oint \mathbf{F} \cdot \mathbf{\hat{t}} ds = 0$, for a central force. More generally, forces with this property are called **conservative forces**. Being a central force is sufficient to be conservative, but not necessary i.e. there are conservative forces which are not central forces.
+#
+# $\oint$ denotes integration on a closed path.
+#
+# In particular, we get 
+#
+# $$\oint \mathbf{E} \cdot \mathbf{\hat{t}} ds = 0$$
+#
+# The term *circulation* is often used for the path integral around a closed curve of the tangential component of a vector function. So the *circulation* of the electrostatic field is zero.
+#
+#
+
+# %% [markdown]
+# ## Curl
+#
+# We do the same exercise as we did for divergence. We try to derive a differential expression for the circulation law, because the integral form while clear in its meaning, is hard to use in practice.
+#
+# First consider first a point (x,y,z), and a small rectangular region of sides $\Delta x, \Delta y$ parallel to the x and y axis. What is the *circulation* of a vector function $\mathbf{F}(x,y,z)$ around this region? We label the top and bottom sides as $C_T$ and $C_B$ respectively.
+#
+# First taking the sides parallel to the x-axis, we can see the contribution to the circulation is (approximately, assuming the midpoint as the average) $-\left( F(x,y + \dfrac{\Delta y}{2}, z) - F(x,y - \dfrac{\Delta y}{2}, z) \right) \Delta x$. 
+#
+# **Some notes**:  
+# (i) The minus sign comes we are following the right hand rule for positive values. By this token, the lower line along $(y - \dfrac{\Delta y}{2})$ is heading in the +ve x direction, and the upper line along $(y + \dfrac{\Delta y}{2})$ is heading towards the -ve x direction. As mentioned in the book:
+#
+# $\int_{C_T} F_x dx = \int_{C_T} F_x\dfrac{dx}{ds}ds$, and $\dfrac{dx}{ds} = -1$ for $C_T$
+#
+# (ii) What is the justification for taking $F(x,y - \dfrac{\Delta y}{2}, z)$ as the average value for the whole length? Obviously it is the midpoint of the segment. Assume F is continuous and differentiable on the interval $(x - \Delta x/2, x + \Delta x / 2)$, The z and y coordinates are constant - z and y - $\dfrac{\Delta y}{2}$, respectively.
+#
+# So we have f(x) on an interval (a,b) where f is continuous and differentiable. By the mean value theorem, there is a point c in the interval (a,b), such that $\int_{(a,b)} f = f(c)(b-a) = f(c)\Delta x$, in our case. Also as $\Delta x$ tends to zero, because f is continuous, it is bounded and $\lim_{\Delta x \to m} f(x) = f(m)$, where m is the midpoint of (a,b). As $\Delta x \to 0$, $f(c) \to f(m)$. This justifies our taking $f(m)\Delta x$ as the term equal to the integral in the limit.
+#
+#
+# Rewriting the expression to match the partial derivative, and substituting $\Delta S = \Delta x \Delta y$, we get :
+#
+#
+# $\dfrac{1}{\Delta S} \int_{C_T + C_B} \mathbf{F} \cdot \mathbf{t} ds \approx -\dfrac{\left( F(x,y + \dfrac{\Delta y}{2}, z) - F(x,y - \dfrac{\Delta y}{2}, z) \right)}{\Delta y} \Delta x$
+#
+# Similarly, taking $C_L$ and $C_R$ as the left and right sides, we get:
+#
+# $\dfrac{1}{\Delta S} \int_{C_L + C_R} \mathbf{F} \cdot \mathbf{t} ds \approx \dfrac{\left( F(x + \dfrac{\Delta x}{2}, y, z) - F(x - \dfrac{\Delta x}{2},y, z) \right)}{\Delta x} \Delta y$
+#
+# Taking limits, we get :
+#
+# $$\lim\limits_{\substack{\Delta S \to 0 \\ \text{normal } \mathbf{k}}} \dfrac{1}{\Delta S} \int_{x-y} \mathbf{F} \cdot \mathbf{\hat{t}} ds = \dfrac{\partial F_y}{\partial x} - \dfrac{\partial F_x}{\partial y}$$
+#
+# Similarly, we get:
+# $$\lim\limits_{\substack{\Delta S \to 0 \\ \text{normal } \mathbf{i}}} \dfrac{1}{\Delta S} \int_{y-z} \mathbf{F} \cdot \mathbf{\hat{t}} ds = \dfrac{\partial F_z}{\partial y} - \dfrac{\partial F_y}{\partial z}$$
+#
+# and:
+#
+# $$\lim\limits_{\substack{\Delta S \to 0 \\ \text{normal } \mathbf{j}}} \dfrac{1}{\Delta S} \int_{z-x} \mathbf{F} \cdot \mathbf{\hat{t}} ds = \dfrac{\partial F_x}{\partial z} - \dfrac{\partial F_z}{\partial x}$$
+#
+#
+# We can think of this as components of a vector at a point in space, and by that definition. We call this vector the "curl of \mathbf{F}" and the expression we get is :
+#
+#
+# $\text{curl } \mathbf{F} = \mathbf{i}\left( \dfrac{\partial F_z}{\partial y} - \dfrac{\partial F_y}{\partial z} \right) + \mathbf{j}\left( \dfrac{\partial F_x}{\partial z} - \dfrac{\partial F_z}{\partial x} \right) + \mathbf{k}\left( \dfrac{\partial F_y}{\partial x} - \dfrac{\partial F_x}{\partial y} \right)$ 
+#
+# However, this is just the expression for curl in cartesian coordinates. As a definition, we prefer to think of curl as the circulation per unit area at a point (x,y,z). To be precise, suppose we have a curve $C_n$ whose normal is $\mathbf{\hat{n}}$, as shown in the figure. Then:
+#
+# $$\boxed{\mathbf{\hat{n}} \cdot \text{curl } \mathbf{F} = \lim\limits_{\Delta S \to 0} \dfrac{1}{\Delta S} \int_{C_n} \mathbf{F} \cdot \mathbf{\hat{t}} ds \quad \text{curl as the circulation per unit area at a point}}$$
+#
+#
+# We also write this in terms of our del operator :
+#
+# $$\boxed{\text{curl } \mathbf{F} = \nabla \times F}$$
+#
+# **Notes**
+#
+# By taking $\mathbf{\hat{n}}$ to be i,j,k respectively, we get back the figures we derived. For an arbitrary curve, it is important to remember we expect the enclosed area to be in a plane - in the limiting case where the area tends to 0, we can assume this is true. 
+#
+# One way to think of this is that the tangent vector to a curve has $\mathbf{i},\mathbf{j},\mathbf{k}$ components, $d\mathbf{r} = dx\mathbf{i} + dy\mathbf{j} + dz\mathbf{k}$ as does our function $\mathbf{F} = P\mathbf{i} + Q\mathbf{j} + R\mathbf{k}$. The dot product is $Pdx + Qdy + Rdz$, so the integral around the curve does resolve to an integral around 3 curves which are the projections of the curve on the xy, yz and zx planes respectively. 
+#
+# Curl used to called rot, and fields with zero curl were (and are still) called *irrotational*
+#
+#
+#
+
+# %% [markdown]
+# ## Curl in Cylindrical Coordinates
+#
+# In cylindrical coordinate system, we keep $r, \theta, z$ constant in turn. The key difference from cartesian coordinates is that the area $\Delta S$ varies depending on r in particular. So if we take $r-\theta$ plane, the area $\Delta S = r\Delta r \Delta \theta$. And the length along r-constant curves is $(r \pm \Delta r/2)\Delta \theta$, which means the partial derivative ends up being for $rF_{\theta}$. 
+#
+#
+# $$(\nabla \times \mathbf{F})_z = \lim\limits_{\substack{\Delta S \to 0 \\ \text{normal } \mathbf{z}}} \dfrac{1}{\Delta S} \int_{r-\theta} \mathbf{F} \cdot \mathbf{\hat{t}} ds = \dfrac{1}{r}\dfrac{\partial (rF_{\theta})}{\partial r} - \dfrac{1}{r}\dfrac{\partial F_r}{\partial \theta}$$
+#
+# With constant r, we have one side being $r\Delta \theta$ and the other being $\Delta z$. The difference here is that r is a constant, so the there is no $\Delta r$ component in the two z-fixed sides - this allows the r to be taken out and cancels the 1/r factor, so we get:
+#
+# $$(\nabla \times \mathbf{F})_r = \lim\limits_{\substack{\Delta S \to 0 \\ \text{normal } \mathbf{r}}} \dfrac{1}{\Delta S} \int_{\theta-z} \mathbf{F} \cdot \mathbf{\hat{t}} ds = \dfrac{1}{r}\dfrac{\partial F_z}{\partial \theta} - \dfrac{1}{r}\dfrac{\partial rF_{\theta}}{\partial z} = \dfrac{1}{r}\dfrac{\partial F_z}{\partial \theta} - \dfrac{\partial F_{\theta}}{\partial z}$$
+#
+#
+# Finally, the constant $\theta$ case is straightforward:
+#
+# $$(\nabla \times \mathbf{F})_{\theta} = \lim\limits_{\substack{\Delta S \to 0 \\ \text{normal } \mathbf{\theta}}} \dfrac{1}{\Delta S} \int_{z-r} \mathbf{F} \cdot \mathbf{\hat{t}} ds = \dfrac{\partial F_r}{\partial z} - \dfrac{\partial F_z}{\partial r}$$
+#
+
+# %% [markdown]
+# ## Curl in Spherical Coordinates
+#
+# In spherical coordinate system, we have $r, \phi, \theta$, with $\phi$ being the polar angle (per this book).
+#
+# Now, taking constant $\phi$, this is a cone, with a constant polar angle $\phi$. Taking constant r, you get a sphere, and taking constant $theta$, we get a vertical plane through the center.
+#
+#
+# For the cone, the area swept out is $r\sin(\phi)drd\theta$
+#
+# $$(\nabla \times \mathbf{F})_{\phi} = \lim\limits_{\substack{\Delta S \to 0 \\ \text{normal } \mathbf{\phi}}} \dfrac{1}{\Delta S} \int_{\theta-r} \mathbf{F} \cdot \mathbf{\hat{t}} ds =  \dfrac{1}{r\sin(\phi)}\dfrac{\partial F_r}{\partial \theta} - \dfrac{1}{r\sin(\phi)}\dfrac{\partial (r\sin(\phi)F_{\theta})}{\partial r} = \dfrac{1}{r\sin(\phi)}\dfrac{\partial F_r}{\partial \theta} - \dfrac{1}{r}\dfrac{\partial (rF_{\theta})}{\partial r}$$
+#
+# For the sphere, the area swept out is $r^2\sin(\phi)drd\theta$, with $r\sin(\phi)d\theta$ on one side, and $rd\phi$ on the other.
+#
+#
+# $$(\nabla \times \mathbf{F})_{r} = \lim\limits_{\substack{\Delta S \to 0 \\ \text{normal } \mathbf{r}}} \dfrac{1}{\Delta S} \int_{\phi-\theta} \mathbf{F} \cdot \mathbf{\hat{t}} ds =  \dfrac{1}{r^2\sin(\phi)}\dfrac{\partial r\sin(\phi)F_{\theta}}{\partial \phi} - \dfrac{1}{r^2\sin(\phi)}\dfrac{\partial (rF_{\phi})}{\partial \theta} = \dfrac{1}{r\sin(\phi)}\dfrac{\partial \sin(\phi)F_{\theta}}{\partial \phi} - \dfrac{1}{r\sin(\phi)}\dfrac{\partial (F_{\phi})}{\partial \theta}$$
+#
+# And finally, the plane, where $\theta$ is constant, this is a bit like the cylindrical case with z constant. 
+#
+#
+# $$(\nabla \times \mathbf{F})_{\theta} = \lim\limits_{\substack{\Delta S \to 0 \\ \text{normal } \mathbf{\theta}}} \dfrac{1}{\Delta S} \int_{r-\phi} \mathbf{F} \cdot \mathbf{\hat{t}} ds = \dfrac{1}{r}\dfrac{\partial (rF_{\phi})}{\partial r} - \dfrac{1}{r}\dfrac{\partial F_r}{\partial \phi}$$
+#
+
+# %% [markdown]
+#
